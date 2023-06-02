@@ -11,6 +11,10 @@ find_package(MPI REQUIRED)
 set(CMAKE_CXX_COMPILE_FLAGS ${CMAKE_CXX_COMPILE_FLAGS} ${MPI_COMPILE_FLAGS})
 set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
 
+find_package(Eigen3 REQUIRED)
+set(EIGEN3_INCLUDE_DIR eigen)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 include_directories(${MPI_INCLUDE_PATH})
 
 add_subdirectory(pybind11)

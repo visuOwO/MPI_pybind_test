@@ -9,6 +9,8 @@
 #include <pybind11/pybind11.h>
 #include <stdio.h>
 #include <omp.h>
+#include <Eigen/Dense>
+#include <iostream>
 
 using pymod = pybind11::module;
 
@@ -20,6 +22,7 @@ public:
     void Test();
     void OMP_Hello(int ID);
     void test_MPI();
+    void test_Eigen();
 };
 
 #endif //MPI_PYBIND_TEST_HELLO_H

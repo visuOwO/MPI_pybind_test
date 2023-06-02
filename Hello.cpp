@@ -24,7 +24,26 @@ void Hello::test_MPI() {
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     this->OMP_Hello(world_rank);
-    MPI_Finalize();
+}
+
+void Hello::test_Eigen() {
+    Eigen::MatrixXd m = Eigen::MatrixXd::Random(3,3);
+    Eigen::MatrixXd r = m * m.transpose();
+    int myrank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+    if (myrank == 0) {
+        std::cout << "Matrix before send is:" << std::endl;
+        std::cout << m << std::endl;
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Status status;
+    if (myrank == 0) {
+        MPI_Send(m.data(), m.size(), MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
+    } else if (myrank == 1) {
+        MPI_Recv(r.data(), m.size(), MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
+        std::cout << "Matrix after recv is:" << std::endl;
+        std::cout << r << std::endl;
+    }
 }
 
 
@@ -36,5 +55,6 @@ PYBIND11_MODULE(hello, mmod)
             .def(py::init<>())
             .def("Test", &Hello::Test)
             .def("OMP_Hello", &Hello::OMP_Hello)
+            .def("test_Eigen", &Hello::test_Eigen)
             .def("test_MPI", &Hello::test_MPI);
 }
